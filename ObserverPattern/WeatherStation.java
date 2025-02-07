@@ -111,8 +111,8 @@ class StatisticsDisplay implements Observer, DisplayElement {
 }
 
 class ForecastDisplay implements Observer, DisplayElement {
-    private float temperature;
-    private float humidity;
+    private float currentPressure = 0.0f;  
+	private float lastPressure;
     private Subject weatherData;
     
     public ForecastDisplay(Subject weatherData) {
@@ -121,14 +121,21 @@ class ForecastDisplay implements Observer, DisplayElement {
     }
 
     public void update(float temperature, float humidity, float pressure) {
-        this.temperature = temperature;
-        this.humidity = humidity;
+        this.lastPressure = currentPressure;
+        this.currentPressure = pressure;
         display();
     }
 
     public void display() {
-        System.out.println("Forecast: ");
-    }
+		System.out.print("Forecast: ");
+		if (currentPressure > lastPressure) {
+			System.out.println("Improving weather on the way!");
+		} else if (currentPressure == lastPressure) {
+			System.out.println("More of the same");
+		} else if (currentPressure < lastPressure) {
+			System.out.println("Watch out for cooler, rainy weather");
+		}
+	}
 }
 
 class HeatIndexDisplay implements Observer, DisplayElement {
